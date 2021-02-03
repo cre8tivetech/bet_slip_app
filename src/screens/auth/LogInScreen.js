@@ -33,13 +33,22 @@ import {
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const appwidth = windowWidth * 0.8;
+const colors = {
+  primary: '#00c7e5',
+  text: '#777777',
+  text_1: '#242424',
+  text_2: '#e6e1e1',
+  text_4: '#9b9b9b',
+  background: '#ffffff',
+  background_1: '#838383',
+  background_2: '#252a3e',
+};
 
 const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
   const [remember, setRemember] = useState(true);
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [logo, setLogo] = useState(LOGO);
   const ref = React.useRef(null);
-  const { colors } = useTheme();
   useScrollToTop(ref);
   // const dispatch = useDispatch();
   const login = (values) => {
@@ -48,38 +57,39 @@ const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
     signInStart(values.email, values.password);
   };
 
-  useEffect(() => {
-    console.log(colors.mode);
-    if (colors.mode === 'dark') {
-      // practxLogo-dark
-      setLogo(LOGO);
-    } else {
-      setLogo(LOGO2);
-    }
-  }, [colors.mode]);
+  // useEffect(() => {
+  //   console.log(colors.mode);
+  //   if (colors.mode === 'dark') {
+  //     // practxLogo-dark
+  //     setLogo(LOGO);
+  //   } else {
+  //     setLogo(LOGO2);
+  //   }
+  // }, [colors.mode]);
 
   return (
     <Content>
       <View style={[styles.container, { backgroundColor: colors.background }]}>
         <View style={{ width: '80%' }}>
           <Animatable.View animation="pulse">
-            <Image style={styles.logo} source={logo} resizeMode="contain" />
-
-            <View style={{ alignItems: 'center', marginTop: 10 }}>
-              <Text
-                style={{
-                  fontSize: normalize(28),
-                  fontFamily: 'SofiaProSemiBold',
-                  color: 'white',
-                }}>
-                Welcome Back
-              </Text>
-
+            {/* <Image style={styles.logo} source={logo} resizeMode="contain" /> */}
+            <Text
+              style={{
+                fontSize: normalize(28),
+                fontFamily: 'SofiaProSemiBold',
+                color: colors.text,
+                textAlign: 'center',
+                marginBottom: 30,
+              }}>
+              Bet4Me
+            </Text>
+            <View
+              style={{ alignItems: 'center', marginTop: 0, marginBottom: 10 }}>
               <Text style={[styles.topText, { color: colors.text_1 }]}>
                 Enter your Email & Password for
               </Text>
               <Text style={[styles.topText, { color: colors.text_1 }]}>
-                Login into practx
+                Login into bet4me
               </Text>
             </View>
           </Animatable.View>
@@ -87,8 +97,8 @@ const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
           <Animatable.View animation="bounceInLeft" style={{ marginTop: 20 }}>
             <Formik
               initialValues={{
-                email: 'jaskyparrot@gmail.com',
-                password: 'test123',
+                email: 'cre8tivetech1@gmail.com',
+                password: '@Password123',
               }}
               onSubmit={(values) => {
                 login(values);

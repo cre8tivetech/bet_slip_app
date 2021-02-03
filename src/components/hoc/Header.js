@@ -12,6 +12,17 @@ import { Button, Icon } from 'react-native-elements';
 import { CheckBox } from 'native-base';
 import { ActivityIndicator } from 'react-native-paper';
 
+const colors = {
+  primary: '#00c7e5',
+  text: '#777777',
+  text_1: '#242424',
+  text_2: '#e6e1e1',
+  text_4: '#9b9b9b',
+  background: '#ffffff',
+  background_1: '#838383',
+  background_2: '#252a3e',
+};
+
 const Header = ({
   navigation,
   title,
@@ -23,8 +34,8 @@ const Header = ({
   backArrow,
   isLoading,
   logoutBtn,
+  signOut,
 }) => {
-  const { colors } = useTheme();
   const screenWidth = Math.round(Dimensions.get('window').width);
   console.log(screenWidth, '&', screenWidth / 2);
   console.log(checkState);
@@ -43,14 +54,14 @@ const Header = ({
         zIndex: 100,
         height: 50,
         width: Math.round(Dimensions.get('window').width),
-        borderBottomColor: colors.background_1,
+        borderBottomColor: '#f4f2f2',
         borderBottomWidth: 0.8,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-end',
         backgroundColor: colors.background,
       }}>
-      {backArrow ? (
+      {/* {backArrow ? (
         <TouchableOpacity
           style={{
             justifyContent: 'center',
@@ -107,7 +118,7 @@ const Header = ({
             }}
           />
         </TouchableOpacity>
-      )}
+      )} */}
       <View
         style={{
           top: 0,
@@ -157,7 +168,7 @@ const Header = ({
         )}
         {logoutBtn && (
           <TouchableOpacity
-            onPress={() => console.log('hello world')}
+            onPress={() => signOut()}
             style={{ flexDirection: 'row' }}>
             <Icon
               name="logout"
@@ -169,9 +180,9 @@ const Header = ({
                 marginLeft: 25,
               }}
             />
-            <Text style={{ fontSize: normalize(16), marginLeft: 5 }}>
+            {/* <Text style={{ fontSize: normalize(16), marginLeft: 5 }}>
               Logout
-            </Text>
+            </Text> */}
           </TouchableOpacity>
         )}
         {notifyIcon && (

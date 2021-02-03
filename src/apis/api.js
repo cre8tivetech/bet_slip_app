@@ -1,33 +1,33 @@
 import Axios from 'axios';
 import {
   REACT_APP_API,
-  REACT_APP_PRACTICES,
+  REACT_APP_SEND_SLIP,
   REACT_APP_JOIN_PRACTICES,
   REACT_APP_EDIT_PROFILE,
 } from '@env';
 import { Platform } from 'react-native';
 
-export const getPracticesApi = async (token) => {
+export const sendSlipApi = async (token, data) => {
   const headers = {
     'Content-Type': 'application/json',
-    Authorization: token,
+    Authorization: `Token ${token}`,
   };
-  const url = REACT_APP_API + REACT_APP_PRACTICES;
-  const collectionsMap = await Axios.get(url, { headers: headers });
+  const url = REACT_APP_API + REACT_APP_SEND_SLIP;
+  const collectionsMap = await Axios.post(url, data, { headers: headers });
   return collectionsMap;
 };
 
-export const joinPracticeApi = async (practiceId, token) => {
-  console.log(token);
-  const headers = {
-    'Content-Type': 'application/json',
-    Authorization: token,
-  };
-  const url =
-    REACT_APP_API + REACT_APP_JOIN_PRACTICES + '/' + practiceId + '/request';
-  const collectionsMap = await Axios.post(url, {}, { headers: headers });
-  return collectionsMap;
-};
+// export const joinPracticeApi = async (practiceId, token) => {
+//   console.log(token);
+//   const headers = {
+//     'Content-Type': 'application/json',
+//     Authorization: token,
+//   };
+//   const url =
+//     REACT_APP_API + REACT_APP_JOIN_PRACTICES + '/' + practiceId + '/request';
+//   const collectionsMap = await Axios.post(url, {}, { headers: headers });
+//   return collectionsMap;
+// };
 
 // export const editProfileApi = async (token, data) => {
 //   console.log(data);

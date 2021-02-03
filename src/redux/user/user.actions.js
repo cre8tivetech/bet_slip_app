@@ -1,5 +1,10 @@
 import UserActionTypes from './user.types';
 
+export const submitSlip = (slip) => ({
+  type: UserActionTypes.SUBMIT_SLIP,
+  payload: slip,
+});
+
 export const setCurrentUser = (userDetails) => ({
   type: UserActionTypes.SET_CURRENT_USER,
   payload: userDetails,
@@ -106,19 +111,6 @@ export const setLoading = (condition) => ({
 export const setPaymentData = (txref) => ({
   type: UserActionTypes.SET_PAYMENT_DATA,
   payload: txref,
-});
-export const userPaymentStart = (txref) => ({
-  type: UserActionTypes.USER_PAYMENT_START,
-  payload: txref,
-});
-
-export const userPaymentSucesss = (ref) => ({
-  type: UserActionTypes.USER_PAYMENT_SUCCESS,
-});
-
-export const userPaymentFailure = (message) => ({
-  type: UserActionTypes.USER_PAYMENT_FAILURE,
-  payload: message,
 });
 
 export const signOutStart = () => ({

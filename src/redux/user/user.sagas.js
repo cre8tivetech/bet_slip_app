@@ -31,6 +31,7 @@ import {
   editProfileApi,
   getDownloadsApi,
   getSubscriptionApi,
+  sendSlipApi,
 } from '../../apis/api';
 import { showMessage, hideMessage } from 'react-native-flash-message';
 
@@ -97,26 +98,73 @@ export function* signUp({
   }
 }
 
-// export function* getSnapshotFromUserAuth(userAuth) {
-//   try {
-//     yield put(signInSuccess(userAuth));
-//   } catch (error) {
-//     yield put(
-//       signInFailure(
-//         error.response
-//           ? error.response.data.message || error.response.data.error
-//           : 'Oops!!, Poor internet connection, Please check your connectivity, And try again',
-//       ),
-//     );
-//   }
-// }
+export function* willSubmitSlip({ payload: data }) {
+  const tokens = yield select(userToken);
+  console.log(tokens);
+  console.log(data, 'and');
+  try {
+    const result = yield sendSlipApi(tokens, data).then(function (response) {
+      return response.data;
+    });
+    console.log(result);
+    // const token = {
+    //   key: result.token,
+    //   expire: tokenExpiration(),
+    // };
+    // if (result) {
+    //   console.log(result);
+    //   showMessage({
+    //     message: 'Login successfully',
+    //     type: 'success',
+    //   });
+    //   yield delay(2000);
+    //   yield put(setToken(token));
+    //   yield yield put(signInSuccess(result.patient));
+    // }
+  } catch (error) {
+    // console.log(error.response.data);
+    let eMsg = '';
+    if (error.response) {
+      error.response.data.errors.map(function (i, err) {
+        if (error.response.data.errors.length > 1) {
+          eMsg += err + 1 + '. ' + i + '\n';
+          console.log(eMsg);
+        } else {
+          eMsg += i;
+          console.log(eMsg);
+        }
+      });
+      showMessage({
+        message: eMsg,
+        type: 'danger',
+      });
+    } else {
+      showMessage({
+        message: error.message,
+        type: 'danger',
+      });
+    }
+    // showMessage({
+    //   message: error.response ? error.response.data.errors : error.message,
+    //   type: 'danger',
+    // });
+    yield delay(2000);
+    yield put(
+      signInFailure(
+        error.response
+          ? error.response.data.errors || error.response.data.errors
+          : 'Sign in failed, Please check your connectivity, And try again',
+      ),
+    );
+  }
+}
 
 export function* signIn({ payload: { email, password } }) {
   console.log('I am here');
   console.log(email, 'and');
   try {
     const result = yield signInApi(email, password).then(function (response) {
-      return response.data;
+      return response.data.data;
     });
     console.log(result);
     const token = {
@@ -126,12 +174,12 @@ export function* signIn({ payload: { email, password } }) {
     if (result) {
       console.log(result);
       showMessage({
-        message: result.message,
+        message: 'Login successfully',
         type: 'success',
       });
       yield delay(2000);
       yield put(setToken(token));
-      yield yield put(signInSuccess(result.patient));
+      yield yield put(signInSuccess(result.staff));
     }
   } catch (error) {
     // console.log(error.response.data);
@@ -584,12 +632,13 @@ export function* onSignUpStart() {
   yield takeLatest(UserActionTypes.SIGN_UP_START, signUp);
 }
 
-// export function* onSignUpSuccess() {
-//   yield takeLatest(UserActionTypes.SIGN_UP_SUCCESS, signInAfterSignUp);
-// }
+export function* onSubmitSlip() {
+  yield takeLatest(UserActionTypes.SUBMIT_SLIP, willSubmitSlip);
+}
 
 export function* userSagas() {
   yield all([
+    call(onSubmitSlip),
     call(onSignInStart),
     call(OnVerifyAccount),
     call(onEditProfileStart),

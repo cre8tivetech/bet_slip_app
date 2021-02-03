@@ -37,14 +37,24 @@ function SplashScreen() {
     </View>
   );
 }
+const colors = {
+  primary: '#00c7e5',
+  text: '#777777',
+  text_1: '#4d4c4c',
+  text_2: '#a8a8a8',
+  text_4: '#9b9b9b',
+  background: '#ffffff',
+  background_1: '#ffffff',
+  background_2: '#252a3e',
+};
 const Stack = createStackNavigator();
 const App = ({ themeMode, user, token }) => {
   const routeNameRef = React.useRef();
   const navigationRef = React.useRef();
   const [isLoading, setIsLoading] = useState(false);
   const [state, setState] = useState({
-    color: null,
-    scheme: null,
+    color: colors.background,
+    scheme: 'dark-content',
     theme: null,
   });
   useMemo(() => {
