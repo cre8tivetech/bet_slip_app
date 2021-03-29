@@ -224,6 +224,7 @@ const DeviceList = ({
             backgroundColor: colors.primary,
             justifyContent: 'center',
             alignItems: 'center',
+            marginTop: 20,
             alignSelf: 'center',
             borderRadius: 10,
           }}

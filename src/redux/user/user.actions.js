@@ -1,8 +1,18 @@
 import UserActionTypes from './user.types';
 
-export const submitSlip = (slip) => ({
-  type: UserActionTypes.SUBMIT_SLIP,
+export const submitSlipStart = (slip) => ({
+  type: UserActionTypes.SUBMIT_SLIP_START,
   payload: slip,
+});
+
+export const submitSlipSuccess = (slip) => ({
+  type: UserActionTypes.SUBMIT_SLIP_SUCCESS,
+  payload: slip,
+});
+
+export const setPreview = (action) => ({
+  type: UserActionTypes.SET_PREVIEW,
+  payload: action,
 });
 
 export const setCurrentUser = (userDetails) => ({

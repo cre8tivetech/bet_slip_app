@@ -148,7 +148,7 @@ const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
                       </Text>
                     </View>
 
-                    <Pressable
+                    {/* <Pressable
                       hitSlop={{ bottom: 10, top: 10 }}
                       onPress={() => navigation.navigate('forgotpass')}>
                       <Text
@@ -161,7 +161,7 @@ const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
                         ]}>
                         Forgot Password
                       </Text>
-                    </Pressable>
+                    </Pressable> */}
                   </Animatable.View>
                   <View style={styles.loginButtonView}>
                     <Button
@@ -178,35 +178,6 @@ const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
                       }}
                       loading={isLoading}
                     />
-                    <Pressable
-                      style={styles.bellowButtonText}
-                      hitSlop={{ bottom: 10, top: 10 }}
-                      onPress={() => navigation.navigate('signup')}>
-                      <Text
-                        style={[styles.whiteFont, { color: colors.text_1 }]}>
-                        Dont have an account?{' '}
-                        <Text
-                          style={{
-                            color: colors.primary,
-                            fontSize: normalize(14),
-                          }}>
-                          Sign up
-                        </Text>
-                      </Text>
-                    </Pressable>
-
-                    <Pressable
-                      hitSlop={{ bottom: 10, top: 10 }}
-                      onPress={() => navigation.navigate('verifyAccount')}>
-                      <Text
-                        style={{
-                          color: colors.primary,
-                          fontSize: normalize(14),
-                          textAlign: 'center',
-                        }}>
-                        Verify Account
-                      </Text>
-                    </Pressable>
                   </View>
                 </View>
               )}

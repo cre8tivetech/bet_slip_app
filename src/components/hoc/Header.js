@@ -35,6 +35,8 @@ const Header = ({
   isLoading,
   logoutBtn,
   signOut,
+  setPreview,
+  fileData,
 }) => {
   const screenWidth = Math.round(Dimensions.get('window').width);
   console.log(screenWidth, '&', screenWidth / 2);
@@ -58,67 +60,37 @@ const Header = ({
         borderBottomWidth: 0.8,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'flex-end',
+        justifyContent: 'space-between',
         backgroundColor: colors.background,
       }}>
-      {/* {backArrow ? (
-        <TouchableOpacity
-          style={{
-            justifyContent: 'center',
-            flexDirection: 'column',
-            marginHorizontal: 20,
-            marginVertical: 15,
-            width: 40,
-            height: 30,
-            alignItems: 'flex-start',
-          }}
-          onPress={() => navigation.goBack()}>
+      {fileData ? (
+        <TouchableOpacity onPress={() => setPreview(true)}>
           <Icon
-            name="arrow-back"
-            type="material-icons"
+            name="file-text"
+            type="feather"
             color={colors.text}
             size={normalize(21)}
             style={{
               color: colors.text,
-              // alignSelf: 'center',
+              marginLeft: 25,
+            }}
+          />
+          <View
+            style={{
+              position: 'absolute',
+              right: 3,
+              top: 2,
+              width: 6,
+              height: 6,
+              backgroundColor: colors.primary,
+              borderRadius: 50,
             }}
           />
         </TouchableOpacity>
       ) : (
-        <TouchableOpacity
-          style={{
-            justifyContent: 'center',
-            flexDirection: 'column',
-            // marginTop: 20,
-            // marginLeft: 20,
-            // backgroundColor: 'green',
-            marginHorizontal: 20,
-            marginVertical: 15,
-            width: 40,
-            height: 30,
-            alignItems: 'center',
-          }}
-          onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
-          <View
-            style={{
-              backgroundColor: colors.text,
-              width: 22,
-              height: 1.7,
-              marginTop: 4,
-              alignSelf: 'flex-start',
-            }}
-          />
-          <View
-            style={{
-              backgroundColor: colors.primary,
-              width: 11,
-              height: 1.8,
-              marginTop: 4,
-              alignSelf: 'flex-start',
-            }}
-          />
-        </TouchableOpacity>
-      )} */}
+        <View />
+      )}
+
       <View
         style={{
           top: 0,

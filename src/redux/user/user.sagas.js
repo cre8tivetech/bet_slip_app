@@ -26,6 +26,8 @@ import {
   signUpSuccess,
   forgetPasswordSuccess,
   userPaymentFailure,
+  submitSlipSuccess,
+  setPreview,
 } from './user.actions';
 import {
   editProfileApi,
@@ -104,50 +106,29 @@ export function* willSubmitSlip({ payload: data }) {
   console.log(data, 'and');
   try {
     const result = yield sendSlipApi(tokens, data).then(function (response) {
-      return response.data;
+      return response.data.data;
     });
     console.log(result);
-    // const token = {
-    //   key: result.token,
-    //   expire: tokenExpiration(),
-    // };
-    // if (result) {
-    //   console.log(result);
-    //   showMessage({
-    //     message: 'Login successfully',
-    //     type: 'success',
-    //   });
-    //   yield delay(2000);
-    //   yield put(setToken(token));
-    //   yield yield put(signInSuccess(result.patient));
-    // }
+    showMessage({
+      message: result.message,
+      type: 'success',
+    });
+    yield put(setPreview(true));
+    yield delay(3000);
+    yield put(submitSlipSuccess(result));
   } catch (error) {
-    // console.log(error.response.data);
+    console.log(error.response);
     let eMsg = '';
-    if (error.response) {
-      error.response.data.errors.map(function (i, err) {
-        if (error.response.data.errors.length > 1) {
-          eMsg += err + 1 + '. ' + i + '\n';
-          console.log(eMsg);
-        } else {
-          eMsg += i;
-          console.log(eMsg);
-        }
-      });
-      showMessage({
-        message: eMsg,
-        type: 'danger',
-      });
-    } else {
-      showMessage({
-        message: error.message,
-        type: 'danger',
-      });
-    }
+
     // showMessage({
-    //   message: error.response ? error.response.data.errors : error.message,
+    //   message: error.message,
     //   type: 'danger',
     // });
+
+    showMessage({
+      message: error.response ? error.response.data.errors : error.message,
+      type: 'danger',
+    });
     yield delay(2000);
     yield put(
       signInFailure(
@@ -531,7 +512,11 @@ export function* isUserAuthenticated() {
     const expire = yield select(userExpire);
     if (new Date(expire) <= new Date(Date.now())) {
       const message = 'Login Session as expired, 🙏 Please re-login!!';
-      yield put(setMessage({ type: 'error', message: message }));
+      yield showMessage({
+        message: message,
+        type: 'info',
+      });
+      // yield put(setMessage({ type: 'error', message: message }));
       yield delay(3000);
       yield put(signOutStart());
       yield delay(2000);
@@ -633,7 +618,7 @@ export function* onSignUpStart() {
 }
 
 export function* onSubmitSlip() {
-  yield takeLatest(UserActionTypes.SUBMIT_SLIP, willSubmitSlip);
+  yield takeLatest(UserActionTypes.SUBMIT_SLIP_START, willSubmitSlip);
 }
 
 export function* userSagas() {

@@ -12,6 +12,8 @@ const INITIAL_STATE = {
   isLoading: null,
   confirmMessage: null,
   paymentData: null,
+  fileData: null,
+  showPreview: false,
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -22,12 +24,25 @@ const userReducer = (state = INITIAL_STATE, action) => {
         ...state,
         isLoading: true,
       };
-    case UserActionTypes.VERIFY_ACCOUNT:
+
+    case UserActionTypes.SET_PREVIEW:
+      return {
+        ...state,
+        showPreview: action.payload,
+        error: null,
+      };
+    case UserActionTypes.SUBMIT_SLIP_START:
       return {
         ...state,
         isLoading: true,
-        currentUser: null,
-        token: null,
+        fileData: null,
+        error: null,
+      };
+    case UserActionTypes.SUBMIT_SLIP_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        fileData: action.payload,
         error: null,
       };
     case UserActionTypes.SET_CURRENT_USER:

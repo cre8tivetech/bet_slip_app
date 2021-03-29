@@ -29,6 +29,7 @@ import { connect } from 'react-redux';
 import { selectCurrentUser, selectToken } from './src/redux/user/user.selector';
 import FlashMessage from 'react-native-flash-message';
 import { Keyboard } from 'react-native';
+import { checkUserSession } from './src/redux/user/user.actions';
 
 function SplashScreen() {
   return (
@@ -48,7 +49,7 @@ const colors = {
   background_2: '#252a3e',
 };
 const Stack = createStackNavigator();
-const App = ({ themeMode, user, token }) => {
+const App = ({ themeMode, user, token, checkUserSession }) => {
   const routeNameRef = React.useRef();
   const navigationRef = React.useRef();
   const [isLoading, setIsLoading] = useState(false);
@@ -57,6 +58,9 @@ const App = ({ themeMode, user, token }) => {
     scheme: 'dark-content',
     theme: null,
   });
+  useEffect(() => {
+    checkUserSession();
+  }, [checkUserSession, user, token]);
   useMemo(() => {
     Keyboard.dismiss();
 
@@ -150,4 +154,8 @@ const mapStateToProps = createStructuredSelector({
   user: selectCurrentUser,
   token: selectToken,
 });
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = (dispatch) => ({
+  // getPracticesAllStart: () => dispatch(getPracticesAllStart()),
+  checkUserSession: () => dispatch(checkUserSession()),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(App);

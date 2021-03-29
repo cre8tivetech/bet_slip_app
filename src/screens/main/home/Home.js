@@ -24,7 +24,19 @@ import InputBox from '../../../components/hoc/InputBox';
 import { useRef } from 'react';
 import Toast from 'react-native-simple-toast';
 import { connect } from 'react-redux';
-import { signOutStart, submitSlip } from '../../../redux/user/user.actions';
+import {
+  setPreview,
+  signOutStart,
+  submitSlipStart,
+} from '../../../redux/user/user.actions';
+import {
+  selectFileData,
+  selectIsLoading,
+  selectShowPreview,
+} from '../../../redux/user/user.selector';
+import { createStructuredSelector } from 'reselect';
+import Pdf from 'react-native-pdf';
+import PdfPreview from './PdfPreview';
 
 const colors = {
   primary: '#00c7e5',
@@ -37,7 +49,15 @@ const colors = {
   background_2: '#252a3e',
 };
 
-const Home = ({ navigation, signOutStart, submitSlip }) => {
+const Home = ({
+  navigation,
+  signOutStart,
+  submitSlipStart,
+  fileData,
+  isFetching,
+  showPreview,
+  setPreview,
+}) => {
   const inputRef = useRef();
   const [bState, setBState] = useState();
   const [paired, setPaired] = useState();
@@ -49,6 +69,7 @@ const Home = ({ navigation, signOutStart, submitSlip }) => {
   });
   const [isLoadingDevice, setIsLoadingDevice] = useState(false);
   const [showDevice, setShowDevice] = useState(false);
+  // const [showPreview, setShowPreview] = useState(false);
   const [deviceTypes, setDeviceTypes] = useState();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -173,16 +194,16 @@ const Home = ({ navigation, signOutStart, submitSlip }) => {
     }
   };
 
-  // const actionBTooth = () => {
-  //   BluetoothManager.disableBluetooth().then(
-  //     () => {
-  //       // do something.
-  //     },
-  //     (err) => {
-  //       alert(err);
-  //     },
-  //   );
-  // };
+  const actionBTooth = () => {
+    BluetoothManager.enableBluetooth().then(
+      () => {
+        // do something.
+      },
+      (err) => {
+        alert(err);
+      },
+    );
+  };
 
   const connectDevice = (rowData) => {
     setState({
@@ -235,7 +256,7 @@ const Home = ({ navigation, signOutStart, submitSlip }) => {
 
   const submitData = (values) => {
     console.log(values);
-    submitSlip(values);
+    submitSlipStart(values);
   };
   return (
     <View>
@@ -244,6 +265,8 @@ const Home = ({ navigation, signOutStart, submitSlip }) => {
         title="Bet4Me"
         logoutBtn={true}
         signOut={signOutStart}
+        setPreview={setPreview}
+        fileData={fileData}
       />
 
       <ScrollView style={{ marginTop: 50 }}>
@@ -256,7 +279,7 @@ const Home = ({ navigation, signOutStart, submitSlip }) => {
             // marginHorizontal
           }}>
           <TouchableOpacity
-            onPress={() => console.log('hello world')}
+            onPress={() => actionBTooth()}
             style={{
               width: 130,
               height: 80,
@@ -364,7 +387,7 @@ const Home = ({ navigation, signOutStart, submitSlip }) => {
             innerRef={inputRef}
             initialValues={{
               name: '',
-              mobileNo: '',
+              phone_number: '',
               amount: '',
               cash_out_days: '',
               agent_name: '',
@@ -393,8 +416,8 @@ const Home = ({ navigation, signOutStart, submitSlip }) => {
                 <InputBox
                   handleChange={handleChange}
                   handleBlur={handleBlur}
-                  valuesType={values.mobileNo}
-                  name="mobileNo"
+                  valuesType={values.phone_number}
+                  name="phone_number"
                   iconName="phone"
                   iconType="feather"
                   placeholder="Phone"
@@ -460,12 +483,26 @@ const Home = ({ navigation, signOutStart, submitSlip }) => {
 
                 <Button
                   TouchableComponent={() => {
-                    return isLoading ? (
-                      <ActivityIndicator
-                        animating={true}
-                        size={normalize(21)}
-                        color={colors.text}
-                      />
+                    return isFetching ? (
+                      <View
+                        style={{
+                          color: colors.text,
+                          width: 100,
+                          alignSelf: 'center',
+                          justifyContent: 'center',
+                          backgroundColor: colors.primary,
+                          paddingVertical: 5,
+                          marginTop: 20,
+                          borderRadius: 10,
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                        }}>
+                        <ActivityIndicator
+                          animating={true}
+                          size={normalize(21)}
+                          color={colors.background}
+                        />
+                      </View>
                     ) : (
                       <TouchableOpacity
                         onPress={handleSubmit}
@@ -520,17 +557,28 @@ const Home = ({ navigation, signOutStart, submitSlip }) => {
         setShowDevice={setShowDevice}
         state={state}
       />
+      <PdfPreview
+        showPreview={showPreview}
+        setPreview={setPreview}
+        fileData={fileData}
+        colors={colors}
+        isFetching={isFetching}
+        state={state}
+      />
     </View>
   );
 };
-// const mapStateToProps = createStructuredSelector({
-//   currentUser: selectCurrentUser,
-//   isLoading: selectIsLoading,
-// });
+const mapStateToProps = createStructuredSelector({
+  // currentUser: selectCurrentUser,
+  fileData: selectFileData,
+  isFetching: selectIsLoading,
+  showPreview: selectShowPreview,
+});
 
 const mapDispatchToProps = (dispatch) => ({
   // getPracticesAllStart: () => dispatch(getPracticesAllStart()),
   signOutStart: () => dispatch(signOutStart()),
-  submitSlip: (data) => dispatch(submitSlip(data)),
+  submitSlipStart: (data) => dispatch(submitSlipStart(data)),
+  setPreview: (data) => dispatch(setPreview(data)),
 });
-export default connect(null, mapDispatchToProps)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

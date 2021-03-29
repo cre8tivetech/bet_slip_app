@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 
 const selectUser = (state) => state.user;
-
+// fileData;
 export const selectCurrentUser = createSelector(
   [selectUser],
   (user) => user.currentUser,
@@ -21,10 +21,15 @@ export const selectSuccess = createSelector(
   (user) => user.success,
 );
 
-export const selectSubscription = createSelector(
+export const selectFileData = createSelector(
   [selectUser],
-  (user) => user.subscription,
+  (user) => user.fileData,
 );
+export const selectShowPreview = createSelector(
+  [selectUser],
+  (user) => user.showPreview,
+);
+
 export const selectDownload = createSelector(
   [selectUser],
   (user) => user.downloads,
