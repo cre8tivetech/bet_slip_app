@@ -25,7 +25,7 @@ import { useRef } from 'react';
 import Toast from 'react-native-simple-toast';
 import { connect } from 'react-redux';
 import {
-  setPreview,
+  setPreview, 
   signOutStart,
   submitSlipStart,
 } from '../../../redux/user/user.actions';

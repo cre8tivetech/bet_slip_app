@@ -14,6 +14,11 @@ import Pdf from 'react-native-pdf';
 import normalize from '../../../utils/normalize';
 import RNPrint from 'react-native-print';
 import { REACT_APP_API, REACT_APP_SEND_SLIP } from '@env';
+import {
+  BluetoothManager,
+  BluetoothEscposPrinter,
+  BluetoothTscPrinter,
+} from 'react-native-bluetooth-escpos-printer';
 
 const PdfPreview = ({
   showPreview,
@@ -24,27 +29,87 @@ const PdfPreview = ({
 }) => {
   async function printRemotePDF() {
     // const fs = new File();
-
     // let fPath = Platform.select({
     //   ios: fs.dirs.DocumentDir,
     //   android: fs.dirs.DownloadDir,
     // });
-
     // fPath = `${fPath}/pdfFileName.pdf`;
-
     // if (Platform.OS === PlatformTypes.IOS) {
     //   await fs.createFile(fPath, fileData.base64Pdf, 'base64');
     // } else {
     //   await fs.writeFile(fPath, fileData.base64Pdf, 'base64');
     // }
+    const {
+      agent_name,
+      amount,
+      cash_out_days,
+      createdAt,
+      name,
+      phone_number,
+    } = fileData.betSlip;
 
-    const data =
-      REACT_APP_API + REACT_APP_SEND_SLIP + '/pdf/' + fileData.betSlip._id;
-    console.log(data);
+    try {
+      await BluetoothEscposPrinter.printerInit();
+      await BluetoothEscposPrinter.printerAlign(
+        BluetoothEscposPrinter.ALIGN.LEFT,
+      );
+      await BluetoothEscposPrinter.printText('Bet4Me\r\n\r\n\n\n', {
+        encoding: 'GBK',
+        codepage: 0,
+        widthtimes: 1,
+        heigthtimes: 1,
+        fonttype: 1,
+      });
+      await BluetoothEscposPrinter.setBlob(0);
+      await BluetoothEscposPrinter.printerAlign(
+        BluetoothEscposPrinter.ALIGN.RIGHT,
+      );
+      await BluetoothEscposPrinter.printText(`${createdAt}\n\n`, {
+        encoding: 'GBK',
+        codepage: 0,
+        widthtimes: 0,
+        heigthtimes: 0,
+        fonttype: 1,
+      });
+      await BluetoothEscposPrinter.setBlob(0);
+      await BluetoothEscposPrinter.printerAlign(
+        BluetoothEscposPrinter.ALIGN.LEFT,
+      );
+
+      await BluetoothEscposPrinter.printText(`Name: \r\r ${name} \r\n`, {
+        encoding: 'GBK',
+        codepage: 0,
+        widthtimes: 0,
+        heigthtimes: 0,
+        fonttype: 1,
+      });
+      await BluetoothEscposPrinter.printText(
+        `Phone Number: \r\r ${phone_number} \r\n`,
+        {},
+      );
+      await BluetoothEscposPrinter.printText(
+        `Amount: \r\r ₦${amount} \r\n`,
+        {},
+      );
+      await BluetoothEscposPrinter.printText(
+        `Cash Out Days: \r\r ${cash_out_days.map((days) => days + ', ')} \r\n`,
+        {},
+      );
+      await BluetoothEscposPrinter.printText(
+        `Agent Name: \r\r ₦${agent_name} \r\n`,
+        {},
+      );
+    } catch (error) {
+      console.log('Error while trying to print__', error);
+    }
+    // const data =
+    //   REACT_APP_API + REACT_APP_SEND_SLIP + '/pdf/' + fileData.betSlip._id;
+    // console.log('Data___', fileData.base64Pdf);
     // console.log(fileData.base64Pdf.split('pdf;base64,')[1]);
-    await RNPrint.print({
-      filePath: data,
-    });
+    // await BluetoothEscposPrinter.printPic(b4, {});
+    // await RNPrint.print({
+    //   filePath: data,
+    // });
   }
   return (
     <Modal
@@ -146,7 +211,8 @@ const PdfPreview = ({
                   fontSize: normalize(14),
                   fontFamily: 'Comfortaa-Bold',
                 }}
-                onPress={() => printRemotePDF()}
+                // onPress={() => printRemotePDF()}
+                onPress={printRemotePDF}
                 buttonStyle={{
                   width: 75,
                   height: 30,
